@@ -13,9 +13,10 @@ the following core functionalities
 """
 
 from __future__ import print_function
-
+from tabulate import tabulate
 import sys
 import os
+import logging
 import numpy as np
 import matplotlib
 matplotlib.use('TkAgg')
@@ -23,6 +24,8 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import argparse
 import DeepMNIST
+import TrainDataGen
+
 
 FLAGS = None
 
@@ -53,6 +56,22 @@ def execute_training():
 def main():
     """
     """
+    logging.basicConfig(level = logging.DEBUG,
+                        format = '%(levelname)s:%(asctime)s:%(message)s',
+                        datefmt = '%m/%d/%Y %I:%M:%S %p')
+
+    tr_data_generator = TrainDataGen.TrainDataGenerator(blur_type = 'Gaussian',
+                                                        blur_size = 4,
+                                                        patch_size = 64,
+                                                        noise_type = 'Gaussian',
+                                                        noise_level = 2.0)
+                                                        # unknown = 1.0)
+    # print(TrainDataGen.TrainDataGenerator.param_names)
+    # print(tabulate(TrainDataGen.TrainDataGenerator.param_names.items(),
+    #                headers = ['Param name', 'Definition'], tablefmt = 'psql'))
+    print(tabulate(tr_data_generator.params.items(),
+                   headers = ['Param name', 'Value'], tablefmt = 'psql'))
+
     return
 
 
@@ -70,3 +89,5 @@ if __name__ == '__main__':
     print('=' * 80)
     print(unparsed_args)
     print('OK')
+
+    main()
